@@ -13,21 +13,22 @@ const Alert = ({
 	showIcon = true
 }) => {
 	const isDismissable = !!onDismiss;
-	const css = `${isDismissable ? classes.dismissable : ""} ${classes[type]} ${classes.alert}`;
-	const dismiss = isDismissable
-		? <button
-				type="button"
-				className={classes.close}
-				title={dismissTitle}
-				onClick={onDismiss}
-			>
-				×
-			</button>
-		: null;
+	const css = `${isDismissable ? classes.dismissable : ""} ${classes[
+		type
+	]} ${classes.alert}`;
+	const dismiss = isDismissable ? (
+		<button
+			type="button"
+			className={classes.close}
+			title={dismissTitle}
+			onClick={onDismiss}
+		>
+			×
+		</button>
+	) : null;
 
 	return (
 		<div>
-			{" "}
 			{/* this classless container div is used by the transition group above... don't delete it */}
 			<div className={css}>
 				{dismiss}

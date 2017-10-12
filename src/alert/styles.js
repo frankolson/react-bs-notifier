@@ -1,7 +1,9 @@
 import { bootstrap } from "toetag";
 import useSheet from "react-jss";
+import transitionStyles from "../transition-styles";
 
 export default useSheet({
+	...transitionStyles,
 	alert: {
 		composes: "alert",
 		marginBottom: bootstrap.paddingBaseVertical,

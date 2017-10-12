@@ -1,37 +1,60 @@
 import React from "react";
-import * as t from "prop-types";
-
+import { TransitionGroup } from "react-transition-group";
+import {
+	any,
+	arrayOf,
+	func,
+	node,
+	object,
+	oneOfType,
+	shape,
+	string
+} from "prop-types";
 import Container, { PropTypes as ContainerPropTypes } from "./container";
 import Alert, { PropTypes as AlertPropTypes } from "./alert-timer";
+import AlertTransition from "./alert-transition";
+import styles from "./container/styles";
 
-const AlertList = ({ position, alerts, onDismiss, ...props }) => (
-	<Container position={position}>
-		{alerts.map(item => {
-			const dismiss = onDismiss ? () => onDismiss(item) : null;
+const AlertList = ({
+	position,
+	alerts,
+	onDismiss,
+	sheet: { classes },
+	...props
+}) => (
+	<Container position={position} className={classes.container}>
+		<TransitionGroup>
+			{alerts.map(item => {
+				const dismiss = onDismiss ? () => onDismiss(item) : null;
 
-			const { message, ...alertProps } = item;
+				const { message, ...alertProps } = item;
 
-			return (
-				<Alert key={item.id} {...props} {...alertProps} onDismiss={dismiss}>
-					{message}
-				</Alert>
-			);
-		})}
+				return (
+					<AlertTransition key={item.id}>
+						<Alert {...props} {...alertProps} onDismiss={dismiss}>
+							{message}
+						</Alert>
+					</AlertTransition>
+				);
+			})}
+		</TransitionGroup>
 	</Container>
 );
 
+const { timeout, type, headline } = AlertPropTypes;
+
 AlertList.propTypes = {
 	...ContainerPropTypes,
-	alerts: t.arrayOf(
-		t.shape({
-			id: t.any.isRequired,
-			type: AlertPropTypes.type,
-			headline: AlertPropTypes.headline,
-			message: t.oneOfType([t.string, t.node, t.object]).isRequired
+	alerts: arrayOf(
+		shape({
+			id: any.isRequired,
+			type,
+			headline,
+			message: oneOfType([string, node, object]).isRequired
 		})
 	).isRequired,
-	onDismiss: t.func,
-	timeout: AlertPropTypes.timeout
+	onDismiss: func,
+	timeout
 };
 
-export default AlertList;
+export default styles(AlertList);
